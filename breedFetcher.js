@@ -1,24 +1,22 @@
 const request = require("request");
 
-const userSearch = process.argv.slice(2)[0];
+const fetchBreedDescription = (breedName, callback) => {
+  request(
+    `https://api.thecatapi.com/v1/breeds/search?q=${breedName}`,
+    (error, response, body) => {
+      if (error) {
+        return callback(error, null);
+      }
 
-if (!userSearch) {
-  return console.log("What?! You didn't want to learn about cat breeds?!");
-}
+      const formattedResponse = JSON.parse(body);
 
-request(
-  `https://api.thecatapi.com/v1/breeds/search?q=${userSearch}`,
-  (error, response, body) => {
-    if (error) {
-      return console.log("Error! Cat breed not found! \n" + error);
+      if (formattedResponse.length <= 0 || response.statusCode !== 200) {
+        return callback("Breed does not exsist", null);
+      }
+
+      return callback(null, formattedResponse[0].description);
     }
+  );
+};
 
-    const formattedResponse = JSON.parse(body);
-
-    if (formattedResponse.length <= 0) {
-      return console.log("Uh oh that cat breed was not found!");
-    }
-
-    console.log(formattedResponse[0].description);
-  }
-);
+module.exports = { fetchBreedDescription };
