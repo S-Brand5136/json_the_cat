@@ -7,7 +7,7 @@ if (!userSearch) {
 }
 
 request(
-  `https://api.thecatapi.com/v1/breeds/search?q=${userSearch[0]}`,
+  `https://api.thecatapi.com/v1/breeds/search?q=${userSearch}`,
   (error, response, body) => {
     if (error) {
       return console.log("Error! Cat breed not found! \n" + error);
